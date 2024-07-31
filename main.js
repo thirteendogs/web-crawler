@@ -1,4 +1,4 @@
-import { normalizeURL } from "./crawl.js";
+import { normalizeURL, getHTML } from "./crawl.js";
 
 const urls = [
   "https://blog.boot.dev/path/",
@@ -12,3 +12,5 @@ const defectuousURL = "https://bloggg.booeet.devvv/path/";
 for (const url of urls) {
   console.log(normalizeURL(url));
 }
+
+getHTML(urls[0]);
