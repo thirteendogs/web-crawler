@@ -17,11 +17,19 @@ function normalizeURL(url) {
 
   return `${myUrl.hostname}${myUrl.pathname}`;
 }
-async function getHTML(url) {
-  const response = await fetch(url);
-  const html = await response.text();
-  console.log(html);
-}
 
-function getURLsFromHTML(htmlBody, baseURL) {}
-export { normalizeURL, getHTML, getURLsFromHTML };
+async function getURLsFromHTML(baseURL) {
+  const response = await fetch(baseURL);
+  const html = await response.text();
+
+  console.log(html);
+
+  const dom = new JSDOM(html);
+  const listOfAnchors = [];
+  dom.window.document
+    .querySelectorAll("a")
+    .forEach((item) => listOfAnchors.push(item.toString()));
+
+  console.log(listOfAnchors);
+}
+export { normalizeURL, getURLsFromHTML };

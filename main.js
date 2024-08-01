@@ -1,4 +1,4 @@
-import { normalizeURL, getHTML } from "./crawl.js";
+import { normalizeURL, getURLsFromHTML } from "./crawl.js";
 
 const urls = [
   "https://blog.boot.dev/path/",
@@ -13,4 +13,4 @@ for (const url of urls) {
   console.log(normalizeURL(url));
 }
 
-getHTML(urls[0]);
+getURLsFromHTML(urls[0]);
