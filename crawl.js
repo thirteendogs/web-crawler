@@ -2,7 +2,6 @@ import { JSDOM } from "jsdom";
 
 function normalizeURL(url) {
   const myUrl = new URL(url);
-
   if (!myUrl.hostname || myUrl.hostname !== "blog.boot.dev") {
     throw new Error("Invalid hostname");
   }
@@ -18,18 +17,28 @@ function normalizeURL(url) {
   return `${myUrl.hostname}${myUrl.pathname}`;
 }
 
-async function getURLsFromHTML(baseURL) {
-  const response = await fetch(baseURL);
-  const html = await response.text();
-
-  console.log(html);
-
-  const dom = new JSDOM(html);
-  const listOfAnchors = [];
+async function getURLsFromHTML(htmlBody, baseURL) {
+  const dom = new JSDOM(htmlBody);
+  const URLs = [];
   dom.window.document
     .querySelectorAll("a")
-    .forEach((item) => listOfAnchors.push(item.toString()));
+    .forEach((item) => URLs.push(item.toString()));
 
-  console.log(listOfAnchors);
+  const absoluteURLs = URLs.map((URL) => {
+    if (URL.startsWith("/")) {
+      return `${baseURL}${URL}`;
+    } else {
+      return URL;
+    }
+  });
+  console.log(absoluteURLs);
+  return absoluteURLs;
 }
-export { normalizeURL, getURLsFromHTML };
+
+async function getHTMLfromURL(url) {
+  const response = await fetch(url);
+  const html = await response.text();
+
+  return html;
+}
+export { normalizeURL, getURLsFromHTML, getHTMLfromURL };
