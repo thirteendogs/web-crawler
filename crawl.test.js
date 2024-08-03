@@ -28,13 +28,26 @@ describe("getURLsFromHtml", () => {
     <html>
       <body>
         <a href="https://blog.boot.dev/">Frequently Asked Questions</a>
+        <a href="/about">About</a>
       </body>
     </html>
 `;
-  const baseUrl = "https://blog.boot.dev/";
+  const htmlBodyWithInvalidUrl = `
+    <html>
+      <body>
+        <a href="home">Home</a>
+      </body>
+    </html>
+`;
+  const baseUrl = "https://blog.boot.dev";
+
   test("should return an array of urls", () => {
     expect(getURLsFromHtml(htmlBody, baseUrl)).toEqual([
       "https://blog.boot.dev/",
+      "https://blog.boot.dev/about",
     ]);
+  });
+  test("shouldn't add and invalid url to the array", () => {
+    expect(getURLsFromHtml(htmlBodyWithInvalidUrl, baseUrl)).toEqual([]);
   });
 });

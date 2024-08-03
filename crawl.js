@@ -5,10 +5,27 @@ function getURLsFromHtml(htmlBody, baseURL) {
   const dom = new JSDOM(htmlBody);
   const anchors = dom.window.document.querySelectorAll("a");
 
-  anchors.forEach((anchor) => urls.push(anchor.href));
+  anchors.forEach((anchor) => {
+    if (anchor.href.startsWith("/")) {
+      try {
+        const url = new URL(`${baseURL}${anchor.href}`);
+        urls.push(url.href);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const url = new URL(anchor.href);
+        urls.push(url.href);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
 
   return urls;
 }
+
 function normalizeURL(url) {
   const myUrl = new URL(url);
 
