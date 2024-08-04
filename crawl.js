@@ -1,7 +1,28 @@
 import { JSDOM } from "jsdom";
 
-function getHtmlFromUrl(url) {
-  console.log(url);
+async function getHtmlFromUrl(url) {
+  try {
+    const response = await fetch(url);
+
+    if (response.status > 399) {
+      console.error(
+        `Error trying to fetch on ${url} with status ${response.status}.`,
+      );
+      return;
+    }
+
+    if (!response.headers.get("content-type").includes("text/html")) {
+      console.error(
+        `No html content found, the content type is ${response.headers.get("content-type")}`,
+      );
+      return;
+    }
+    const html = await response.text();
+    console.log(html);
+    return html;
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 function getURLsFromHtml(htmlBody, baseURL) {

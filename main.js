@@ -8,7 +8,7 @@ function main() {
   });
 
   rl.question("What's URL you want to crawl? ", (url) => {
-    getHtmlFromUrl(url);
+    console.log(getHtmlFromUrl(url));
     rl.close();
   });
 }
