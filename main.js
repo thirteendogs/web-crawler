@@ -1,13 +1,16 @@
-import { normalizeURL } from "./crawl.js";
+import readline from "node:readline";
+import { getHtmlFromUrl } from "./crawl.js";
 
-const urls = [
-  "https://blog.boot.dev/path/",
-  "https://blog.boot.dev/path",
-  "http://blog.boot.dev/path/",
-  "http://blog.boot.dev/path",
-  "http://google.com/pepperoni/",
-];
+function main() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-for (const url of urls) {
-  console.log(normalizeURL(url));
+  rl.question("What's URL you want to crawl? ", (url) => {
+    getHtmlFromUrl(url);
+    rl.close();
+  });
 }
+
+main();

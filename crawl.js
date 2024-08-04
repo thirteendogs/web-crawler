@@ -1,5 +1,9 @@
 import { JSDOM } from "jsdom";
 
+function getHtmlFromUrl(url) {
+  console.log(url);
+}
+
 function getURLsFromHtml(htmlBody, baseURL) {
   const urls = [];
   const dom = new JSDOM(htmlBody);
@@ -36,4 +40,4 @@ function normalizeURL(url) {
   return `${myUrl.hostname}${myUrl.pathname}`;
 }
 
-export { normalizeURL, getURLsFromHtml };
+export { normalizeURL, getURLsFromHtml, getHtmlFromUrl };
