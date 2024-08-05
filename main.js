@@ -1,14 +1,18 @@
 import readline from "node:readline";
-import { getHtmlFromUrl } from "./crawl.js";
+import { crawlPage } from "./crawl.js";
 
 function main() {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
+  rl.question("What's URL you want to crawl? ", async (baseURL) => {
+    const pages = await crawlPage(baseURL, baseURL, {});
 
-  rl.question("What's URL you want to crawl? ", (url) => {
-    getHtmlFromUrl(url);
+    for (const page of Object.entries(pages)) {
+      console.log(page);
+    }
+
     rl.close();
   });
 }

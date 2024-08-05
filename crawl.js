@@ -1,28 +1,50 @@
 import { JSDOM } from "jsdom";
 
-async function getHtmlFromUrl(url) {
+async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
+  const baseURLObj = new URL(baseURL);
+  const currentURLObj = new URL(currentURL);
+
+  if (baseURLObj.hostname !== currentURLObj.hostname) {
+    return pages;
+  }
+
+  const normalizedCurrentURL = normalizeURL(currentURL);
+  if (pages[normalizedCurrentURL] > 0) {
+    pages[normalizedCurrentURL]++;
+    return pages;
+  }
+
+  pages[normalizedCurrentURL] = 1;
+
+  console.log(`crawling: ${currentURL}`);
+
   try {
-    const response = await fetch(url);
+    const response = await fetch(currentURL);
 
     if (response.status > 399) {
       console.error(
-        `Error trying to fetch on ${url} with status ${response.status}.`,
+        `Error trying to fetch on ${currentURL} with status ${response.status}.`,
       );
-      return;
+      return pages;
     }
 
     if (!response.headers.get("content-type").includes("text/html")) {
       console.error(
         `No html content found, the content type is ${response.headers.get("content-type")}`,
       );
-      return;
+      return pages;
     }
     const html = await response.text();
-    console.log(html);
-    return html;
+
+    const nextURLs = getURLsFromHtml(html, baseURL);
+
+    for (const nextURL of nextURLs) {
+      pages = await crawlPage(baseURL, nextURL, pages);
+    }
   } catch (error) {
     console.error(error.message);
   }
+  return pages;
 }
 
 function getURLsFromHtml(htmlBody, baseURL) {
@@ -61,4 +83,4 @@ function normalizeURL(url) {
   return `${myUrl.hostname}${myUrl.pathname}`;
 }
 
-export { normalizeURL, getURLsFromHtml, getHtmlFromUrl };
+export { normalizeURL, getURLsFromHtml, crawlPage };
