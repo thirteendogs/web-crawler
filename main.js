@@ -1,5 +1,6 @@
 import readline from "node:readline";
 import { crawlPage } from "./crawl.js";
+import { printReport } from "./report.js";
 
 function main() {
   const rl = readline.createInterface({
@@ -8,10 +9,7 @@ function main() {
   });
   rl.question("What's URL you want to crawl? ", async (baseURL) => {
     const pages = await crawlPage(baseURL, baseURL, {});
-
-    for (const page of Object.entries(pages)) {
-      console.log(page);
-    }
+    printReport(pages);
 
     rl.close();
   });
